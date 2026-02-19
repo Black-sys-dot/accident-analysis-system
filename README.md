@@ -90,30 +90,30 @@ Helps identify temporal patterns and peak accident periods.
 
 ## Project Structure
 
----
-
 accident-heatmap/
-│
-├── data/
-│ └── accidents_geo.csv
-│
-├── src/
-│ ├── export_monthly.py
-│ └── spatial_hotspots.py
-│
-├── outputs/
-│ ├── accident_heatmap_all.html
-│ └── accident_heatmap_hotspots.html
-│
-├── frontend/
-│ ├── index.html
-│ ├── map.html
-│ ├── css/
-│ │ └── map.css
-│ ├── js/
-│ │ └── map.js
-│ └── assets/
-│ └── monthly_counts.json
+    data/
+        accidents_geo.csv
+
+    src/
+        export_monthly.py
+        spatial_hotspots.py
+
+    outputs/
+        accident_heatmap_all.html
+        accident_heatmap_hotspots.html
+
+    frontend/
+        index.html
+        map.html
+
+        css/
+            map.css
+
+        js/
+            map.js
+
+        assets/
+            monthly_counts.json
 
 ---
 
