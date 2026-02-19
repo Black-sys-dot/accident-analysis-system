@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ALERT-ACC | Analysis</title>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="css/map.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="main-container">
+
+    <!-- MAP SIDE -->
+    <div class="map-section" id="mapContainer">
+
+        <!-- Back Button -->
+        <button class="back-btn"
+                onclick="window.location.href='index.html'">
+            ←
+        </button>
+
+        <!-- Fullscreen Icon Button -->
+        <button class="fullscreen-btn"
+                onclick="toggleFullscreen()">
+            ⛶
+        </button>
+
+        <iframe id="mapFrame"
+                src="../outputs/accident_heatmap_all.html">
+        </iframe>
+
+    </div>
+
+    <!-- CONTROL PANEL -->
+    <div class="panel">
+
+        <!-- SEASONAL ANALYSIS -->
+        <div class="accordion-header"
+             onclick="toggleSection('seasonSection')">
+            Seasonal Analysis
+        </div>
+
+        <div id="seasonSection"
+             class="accordion-content">
+
+            <button class="season-btn"
+                    onclick="switchMap('../outputs/accident_heatmap_all.html')">
+                All Season
+            </button>
+
+            <button class="season-btn"
+                    onclick="switchMap('../maps/heatmap_summer.html')">
+                Summer
+            </button>
+
+            <button class="season-btn"
+                    onclick="switchMap('../maps/heatmap_monsoon.html')">
+                Monsoon
+            </button>
+
+            <button class="season-btn"
+                    onclick="switchMap('../maps/heatmap_winter.html')">
+                Winter
+            </button>
+
+        </div>
+
+        <!-- MONTHLY TREND -->
+        <div class="accordion-header"
+             onclick="toggleSection('monthlySection')">
+            Monthly Trend
+        </div>
+
+        <div id="monthlySection"
+             class="accordion-content">
+
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+
+        </div>
+
+        <!-- HOTSPOT STRUCTURE -->
+        <div class="accordion-header"
+            onclick="toggleSection('hotspotSection')">
+            Hotspot Structure
+        </div>
+
+        <div id="hotspotSection"
+            class="accordion-content">
+
+            <button class="season-btn"
+                    onclick="switchMap('../outputs/accident_heatmap_hotspots.html')">
+                Show Hotspots
+            </button>
+
+            <button class="season-btn"
+                    onclick="switchMap('../outputs/accident_heatmap_all.html')">
+                Back to Heatmap
+            </button>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script src="js/map.js"></script>
+
+</body>
+</html>

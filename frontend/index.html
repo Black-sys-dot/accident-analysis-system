@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ALERT-ACC</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #c8e1ff;
+            background-image: radial-gradient(#000 2px, transparent 2px);
+            background-size: 30px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding: 60px 20px;
+        }
+
+        .container {
+            border: 6px solid #000;
+            border-radius: 24px;
+            padding: 80px 100px;
+            background: #ffeb3b;
+            box-shadow: 16px 16px 0px #000;
+            text-align: center;
+            position: relative;
+            max-width: 950px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            color: #111;
+        }
+
+        .btn {
+            padding: 16px 48px;
+            font-size: 20px;
+            font-weight: 700;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border: 4px solid #000;
+            border-radius: 12px;
+            display: inline-block;
+            transition: all 0.15s ease;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 10px 10px 0px #000;
+            transform: translate(-4px, -4px);
+        }
+
+        .btn:active {
+            box-shadow: 2px 2px 0px #000;
+            transform: translate(4px, 4px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .stats div {
+            flex: 1;
+        }
+
+        /* Flip Cards Section */
+
+        .features {
+            display: flex;
+            gap: 40px;
+            margin-top: 80px;
+            max-width: 1100px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+            perspective: 1000px;
+        }
+
+        .flip-card {
+            width: 300px;
+            height: 180px;
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 5px solid #000;
+            border-radius: 18px;
+            box-shadow: 10px 10px 0px #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            backface-visibility: hidden;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .flip-front {
+            background: #ffffff;
+        }
+
+        .flip-back {
+            background: #ffeb3b;
+            transform: rotateY(180deg);
+            font-size: 15px;
+        }
+
+        /* Stickers */
+
+        .sticker {
+            position: absolute;
+            width: 140px;
+            z-index: 20;
+            filter: drop-shadow(6px 6px 0px #000);
+            transition: transform 0.3s ease;
+        }
+
+        .sticker:hover {
+            transform: scale(1.08) rotate(0deg);
+        }
+
+        .accident {
+            top: 15%;
+            left: 10%;
+            transform: rotate(-12deg);
+        }
+
+        .stop {
+            top: 10%;
+            right: 15%;
+            transform: rotate(15deg);
+        }
+
+        .speed {
+            bottom: 12%;
+            right: 8%;
+            transform: rotate(10deg);
+        }
+
+        @media (max-width: 900px) {
+            .container { padding: 60px 40px; }
+            h1 { font-size: 44px; }
+            .stats { flex-direction: column; gap: 12px; }
+            .sticker { width: 90px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <img src="assets/accident-prone.png" class="sticker accident">
+    <img src="assets/stop.png" class="sticker stop">
+    <img src="assets/speed-limit.png" class="sticker speed">
+
+    <div class="container">
+        <h1>ALERT-ACC</h1>
+        <p>Mapping Risk Across Pune</p>
+
+        <a href="map.html" class="btn">Enter Analysis</a>
+
+        <div class="stats">
+            <div>477 Incidents</div>
+            <div>3 Seasons Compared</div>
+            <div>100% Locations Mapped</div>
+        </div>
+    </div>
+
+    <div class="features">
+
+        <div class="flip-card">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    Accident Hotspot Identification
+                </div>
+                <div class="flip-back">
+                    Historical accident records were spatially clustered 
+                    to identify high-density risk zones across Pune.
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    Seasonal Risk Analysis
+                </div>
+                <div class="flip-back">
+                    Accident data was categorized by month and season 
+                    to observe variation patterns such as monsoon spikes.
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    Spatial Density Visualization
+                </div>
+                <div class="flip-back">
+                    Text-based locations were geocoded into coordinates 
+                    and visualized as an interactive heatmap.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
