@@ -3,7 +3,7 @@ import requests
 import time
 import os
 
-API_KEY = "YOUR_GOOGLE_MAPS_API_KEY"
+API_KEY = "YOUR_GOOGLE_MAPS_API_KEY"  
 
 INPUT_FILE = "data/processed/accidents_processed.csv"
 OUTPUT_FILE = "data/geocoded/accidents_geo.csv"
