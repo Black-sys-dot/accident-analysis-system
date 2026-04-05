@@ -1,0 +1,7 @@
+.env
+node_modules/
+scraped_data/
+scraped_data_backup/
+cleaning_progress.json
+fetch_queue.json
+fresh_currents_data.json

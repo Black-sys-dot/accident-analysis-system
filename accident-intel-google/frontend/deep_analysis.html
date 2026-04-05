@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ALERT-ACC | Deep Analysis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function () {
+            const key = "alertacc_mobile_ui";
+            const params = new URLSearchParams(window.location.search);
+            const explicit = params.get("mobile");
+            if (explicit === "1" || explicit === "0") {
+                sessionStorage.setItem(key, explicit);
+            }
+
+            let stored = sessionStorage.getItem(key);
+            if (stored !== "1" && stored !== "0") {
+                const detectedMobile = window.matchMedia("(max-width: 980px), (hover: none), (pointer: coarse)").matches;
+                stored = detectedMobile ? "1" : "0";
+                sessionStorage.setItem(key, stored);
+            }
+
+            if (stored === "1") {
+                document.documentElement.classList.add("mobile-ui");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/map.css?v=3.2">
+    <style>
+        .panel {
+            background: #d9e9ff;
+        }
+        .deep-intro-title {
+            margin: 4px 0 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #10233c;
+            letter-spacing: 0.2px;
+        }
+        .deep-intro-subtitle {
+            margin: 0 0 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            line-height: 1.45;
+            color: #2a3f5f;
+            background: rgba(255, 255, 255, 0.65);
+            border: 2px solid rgba(16, 35, 60, 0.15);
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        .map-section {
+            background: #eee;
+        }
+        #chatPanel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+            border: 3px solid #adb8c8;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            min-height: 200px;
+            margin-top: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        #chatDisplay {
+            flex-grow: 1;
+            overflow-y: auto;
+            border-bottom: 1px solid #dde4ee;
+            padding: 6px 2px 12px;
+            margin-bottom: 10px;
+            max-height: 400px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            line-height: 1.45;
+            color: #1d2f49;
+        }
+        #chatDisplay em {
+            color: #4c607f;
+            font-style: normal;
+            font-weight: 500;
+        }
+        .chat-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 1px solid #d4dcea;
+            cursor: zoom-in;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .chat-image:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+        }
+
+        .chart-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 16, 28, 0.74);
+            z-index: 1200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+        }
+        .chart-lightbox.active {
+            display: flex;
+        }
+        .chart-lightbox img {
+            max-width: min(92vw, 1300px);
+            max-height: 88vh;
+            border-radius: 12px;
+            border: 2px solid #d6deeb;
+            background: #fff;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.36);
+        }
+        .chart-lightbox-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 38px;
+            height: 38px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 22px;
+            line-height: 32px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        @media (max-width: 980px), (hover: none), (pointer: coarse) {
+            .deep-intro-title {
+                font-size: 22px;
+            }
+            .deep-intro-subtitle {
+                font-size: 15px;
+                padding: 9px 10px;
+            }
+            #chatDisplay {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <!-- MAP SIDE -->
+    <div class="map-section" id="mapContainer">
+        <div id="map"></div>
+        <button id="mobilePanelToggle" class="mobile-panel-toggle" onclick="toggleMobilePanel()" aria-label="Open controls panel">
+            <span class="toggle-arrow">&lt;&lt;</span>
+        </button>
+    </div>
+
+    <div id="panelBackdrop" class="panel-backdrop" onclick="toggleMobilePanel(false)"></div>
+
+    <!-- CONTROL PANEL -->
+    <div class="panel" id="controlPanel">
+        <div class="mobile-panel-header">
+            <strong>Deep Analysis Sandbox</strong>
+            <button class="mobile-close-btn" onclick="toggleMobilePanel(false)">Close</button>
+        </div>
+
+        <!-- Back Button -->
+        <button id="backToStandardMapBtn" class="season-btn" style="background:#ffeb3b; margin-top: 0px; margin-bottom: 20px;" onclick="handleBackToStandardMap()">&larr; Back to Standard Map</button>
+
+        <h2 class="deep-intro-title">Deep Analysis Sandbox</h2>
+        <p class="deep-intro-subtitle">
+            Ask the agent to run custom scripts, create map layers, and generate charts from the live dataset.
+        </p>
+
+        <!-- CHAT PANEL FOR OUTPUTS -->
+        <div id="chatPanel">
+            <div id="chatDisplay">
+                <em>Agent outputs and charts will appear here.</em><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chartLightbox" class="chart-lightbox" aria-hidden="true">
+    <button id="chartLightboxClose" class="chart-lightbox-close" aria-label="Close enlarged chart">&times;</button>
+    <img id="chartLightboxImage" src="" alt="Enlarged chart preview">
+</div>
+
+<script src="js/runtime-config.js?v=1.2"></script>
+<script src="js/deep_map.js?v=1.3"></script>
+<script src="js/bot.js?v=1.5"></script>
+<script src="js/deep_agent.js?v=1.6"></script>
+<script>
+    (function () {
+        const lightbox = document.getElementById("chartLightbox");
+        const lightboxImg = document.getElementById("chartLightboxImage");
+        const closeBtn = document.getElementById("chartLightboxClose");
+        const chatDisplay = document.getElementById("chatDisplay");
+
+        if (!lightbox || !lightboxImg || !closeBtn || !chatDisplay) {
+            return;
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove("active");
+            lightbox.setAttribute("aria-hidden", "true");
+            lightboxImg.src = "";
+        }
+
+        chatDisplay.addEventListener("click", function (event) {
+            const target = event.target;
+            if (!(target instanceof HTMLImageElement)) return;
+            if (!target.classList.contains("chat-image")) return;
+            lightboxImg.src = target.src;
+            lightbox.classList.add("active");
+            lightbox.setAttribute("aria-hidden", "false");
+        });
+
+        closeBtn.addEventListener("click", closeLightbox);
+        lightbox.addEventListener("click", function (event) {
+            if (event.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>

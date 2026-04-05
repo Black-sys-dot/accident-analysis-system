@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ALERT-ACC | Google Analysis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function () {
+            const key = "alertacc_mobile_ui";
+            const params = new URLSearchParams(window.location.search);
+            const explicit = params.get("mobile");
+            if (explicit === "1" || explicit === "0") {
+                sessionStorage.setItem(key, explicit);
+            }
+
+            let stored = sessionStorage.getItem(key);
+            if (stored !== "1" && stored !== "0") {
+                const detectedMobile = window.matchMedia("(max-width: 980px), (hover: none), (pointer: coarse)").matches;
+                stored = detectedMobile ? "1" : "0";
+                sessionStorage.setItem(key, stored);
+            }
+
+            if (stored === "1") {
+                document.documentElement.classList.add("mobile-ui");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/map.css?v=3.1">
+    <style>
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        .map-section {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <!-- MAP SIDE -->
+    <div class="map-section" id="mapContainer">
+        <div id="map"></div>
+        <button id="mobilePanelToggle" class="mobile-panel-toggle" onclick="toggleMobilePanel()" aria-label="Open controls panel">
+            <span class="toggle-arrow">&lt;&lt;</span>
+        </button>
+    </div>
+
+    <div id="panelBackdrop" class="panel-backdrop" onclick="toggleMobilePanel(false)"></div>
+
+    <!-- CONTROL PANEL -->
+    <div class="panel" id="controlPanel">
+        <div class="mobile-panel-header">
+            <strong>Controls</strong>
+            <button class="mobile-close-btn" onclick="toggleMobilePanel(false)">Close</button>
+        </div>
+
+        <!-- Back Button -->
+        <button class="season-btn" style="background:#ffeb3b; margin-top: 0px; margin-bottom: 10px;" onclick="window.location.href='index.html?v=5'">&larr; Back to Home</button>
+
+        <!-- Deep Analysis Button -->
+        <button class="season-btn" style="background:#00e5ff; margin-top: 0px; margin-bottom: 20px; font-weight: bold; border: 3px solid #000; box-shadow: 4px 4px 0 #000;" onclick="window.location.href='deep_analysis.html'">&#128269; Deep Analysis Mode</button>
+
+        <!-- SEASONAL ANALYSIS -->
+        <div class="accordion-header" onclick="toggleSection('seasonSection')">
+            Seasonal Analysis (Google Maps)
+        </div>
+        <div id="seasonSection" class="accordion-content">
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('heatmap', 'all')">All Season</button>
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('heatmap', 'summer')">Summer</button>
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('heatmap', 'monsoon')">Monsoon</button>
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('heatmap', 'winter')">Winter</button>
+        </div>
+
+        <!-- MONTHLY TREND -->
+        <div class="accordion-header" onclick="toggleSection('monthlySection')">
+            Monthly Trend
+        </div>
+        <div id="monthlySection" class="accordion-content">
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- HOTSPOT STRUCTURE -->
+        <div class="accordion-header" onclick="toggleSection('hotspotSection')">
+            Hotspot Structure
+        </div>
+        <div id="hotspotSection" class="accordion-content">
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('hotspots', 'top5')">Show Top 5 Hotspots</button>
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('hotspots', 'all')">Show All Clusters (20)</button>
+            <button class="season-btn" data-close-mobile-panel="true" onclick="updateMapMode('heatmap', 'all')">Back to Heatmap</button>
+        </div>
+
+        <!-- SAFE ROUTING -->
+        <div class="accordion-header" onclick="toggleSection('routingSection')">
+            Safe Routing
+        </div>
+        <div id="routingSection" class="accordion-content">
+            <div class="route-row">
+                <button class="current-location-btn" type="button" onclick="useCurrentLocation()">Current</button>
+                <input type="text" id="origin" class="route-input" placeholder="Source Address">
+            </div>
+            <div id="originRefineHint" class="origin-refine-hint"></div>
+            <input type="text" id="destination" class="route-input" placeholder="Destination Address">
+            <button class="season-btn" data-close-mobile-panel="true" onclick="findSafestRoute()">Find Safest Route</button>
+            <div id="routeResults"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/runtime-config.js"></script>
+<script src="js/ui-actions.js?v=1.6"></script>
+<script src="js/bot.js?v=1.5"></script>
+<script src="js/agent.js?v=2.8"></script>
+<script src="js/map.js?v=5.1"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+/* Agent Animation States */
+
+.alert-bot-bubble {
+    position: absolute;
+    bottom: 105%;
+    right: 50%;
+    transform: translateX(50%) translateY(10px);
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: 4px 4px 0px #000;
+    z-index: 10;
+}
+
+.alert-bot-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #000 transparent transparent transparent;
+}
+
+.alert-bot-bubble.show {
+    display: block !important;
+    opacity: 1;
+    transform: translateX(50%) translateY(0);
+}
+
+.bot-mode-panel {
+    position: absolute;
+    bottom: 108%;
+    right: -4px;
+    width: 180px;
+    background: #000;
+    border: 3px solid #111;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 4px 4px 0 #000;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 11;
+}
+
+.bot-mode-panel.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.bot-mode-menu {
+    display: flex;
+    gap: 8px;
+}
+
+.bot-mode-btn {
+    flex: 1;
+    border: 2px solid #00ff66;
+    border-radius: 10px;
+    background: #000;
+    color: #00ff66;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 8px;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px #003d1f inset;
+}
+
+.bot-mode-btn:active {
+    transform: translate(1px, 1px) scale(0.99);
+}
+
+.bot-chat-row {
+    display: none;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.bot-mode-panel.chat-open .bot-chat-row {
+    display: flex;
+}
+
+.bot-chat-input {
+    flex: 1;
+    min-width: 0;
+    border: 2px solid #00ff66;
+    border-radius: 10px;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #000;
+    color: #00ff66;
+    outline: none;
+}
+
+.bot-chat-input::placeholder {
+    color: #00cc55;
+}
+
+.bot-chat-send {
+    border: 2px solid #00ff66;
+    border-radius: 10px;
+    padding: 6px 10px;
+    background: #000;
+    color: #00ff66;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px #003d1f inset;
+}
+
+.bot-chat-send:active {
+    transform: translate(1px, 1px) scale(0.99);
+}
+
+@media (max-width: 980px) {
+    .bot-mode-panel {
+        right: auto;
+        left: 0;
+        width: 156px;
+    }
+
+    .bot-mode-btn {
+        font-size: 12px;
+        padding: 6px 6px;
+    }
+
+    .bot-chat-input {
+        font-size: 11px;
+    }
+
+    .bot-chat-send {
+        font-size: 11px;
+        padding: 5px 8px;
+    }
+}
+
+/* Animations based on state classes applied to container */
+
+/* Listening state - make status visually obvious without conflicting with eye tracking transforms */
+.bot-listening .alert-bot-eye img {
+    filter: drop-shadow(0 0 10px #00ff88) sepia(1) hue-rotate(90deg) saturate(10);
+}
+.bot-listening {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.5));
+    animation: bot-listen-ring 0.7s infinite ease-in-out alternate;
+}
+
+/* Processing state - use image glow flicker so transform tracking remains intact */
+.bot-processing .alert-bot-eye img {
+    filter: drop-shadow(0 0 8px #ffff00) sepia(1) hue-rotate(45deg) saturate(10);
+    animation: bot-eye-flicker 0.45s infinite alternate;
+}
+.bot-processing {
+    filter: drop-shadow(0 0 6px rgba(255, 230, 0, 0.45));
+}
+
+/* Speaking state - cyan pulse + container jiggle */
+.bot-speaking .alert-bot-eye img {
+    filter: drop-shadow(0 0 8px #00ffff) sepia(1) hue-rotate(180deg) saturate(10);
+    animation: bot-eye-glow 0.35s infinite alternate;
+}
+.bot-speaking {
+    animation: bot-talk-jiggle 0.2s infinite alternate;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.45));
+}
+
+@keyframes bot-eye-flicker {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+@keyframes bot-eye-glow {
+    0% { opacity: 0.75; }
+    100% { opacity: 1; }
+}
+
+@keyframes bot-talk-jiggle {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-2px) rotate(2deg); }
+}
+
+@keyframes bot-listen-ring {
+    0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.18); }
+    100% { box-shadow: 0 0 0 9px rgba(0, 255, 136, 0.04); }
+}
