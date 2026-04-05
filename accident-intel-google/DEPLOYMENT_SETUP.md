@@ -2,7 +2,7 @@
 
 ## 1) Supabase (manual data upload)
 
-Create table `accidents` with columns:
+Create table `pune-accidents` with columns:
 
 - `lat` (float8)
 - `lon` (float8)
@@ -10,7 +10,7 @@ Create table `accidents` with columns:
 - `season` (text)
 - `location` (text)
 
-Upload only `data_pipeline/gemini/data/geocoded/gemini_accidents_geo.csv` into `accidents`.
+Upload only `data_pipeline/gemini/data/geocoded/gemini_accidents_geo.csv` into `pune-accidents`.
 
 ## 2) Railway (backend only)
 
@@ -28,7 +28,7 @@ Required env vars:
 - `GOOGLE_MAPS_API_KEY`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `SUPABASE_TABLE=accidents`
+- `SUPABASE_TABLE=pune-accidents`
 
 ## 3) Vercel (new frontend project only)
 

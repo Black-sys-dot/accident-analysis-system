@@ -5,7 +5,7 @@ window.ALERT_ACC_CONFIG = window.ALERT_ACC_CONFIG || {};
 (function () {
     const host = (window.location && window.location.hostname) || "";
     const isLocalHost = host === "localhost" || host === "127.0.0.1";
-    const deployedDefault = "https://alert-acc-backend-railway-production.up.railway.app";
+    const deployedDefault = "https://alert-acc-backend-deep-v2-production.up.railway.app";
 
     if (typeof window.ALERT_ACC_CONFIG.RAILWAY_API_BASE_URL === "string") {
         window.ALERT_ACC_CONFIG.RAILWAY_API_BASE_URL =
