@@ -1,12 +1,16 @@
 import pandas as pd
 import json
 import os
+import sys
 
-INPUT_FILE = "data/geocoded/accidents_geo.csv"
+# Add parent directory to path so we can import src.db
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.db import get_accidents_data
+
 OUTPUT_FILE = "frontend/assets/monthly_counts.json"
 
-print("📂 Loading dataset...")
-df = pd.read_csv(INPUT_FILE)
+print("📂 Loading dataset from Supabase...")
+df = get_accidents_data()
 
 df["month"] = pd.to_numeric(df["month"], errors="coerce")
 

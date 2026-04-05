@@ -4,14 +4,17 @@ matplotlib.use("Agg")
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import sys
 
-INPUT_FILE = "data/geocoded/accidents_geo.csv"
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.db import get_accidents_data
+
 OUTPUT_FOLDER = "maps"
 
 def generate_monthly_trend():
 
-    print("📂 Loading dataset...")
-    df = pd.read_csv(INPUT_FILE)
+    print("📂 Loading dataset from Supabase...")
+    df = get_accidents_data()
 
     # Group by month
     monthly_counts = df.groupby("month").size()

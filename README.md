@@ -79,6 +79,8 @@ Helps identify temporal patterns and peak accident periods.
 - Pandas
 - Scikit-learn
 - Folium
+- Supabase (PostgreSQL Database)
+- python-dotenv
 
 ### Frontend
 - HTML
@@ -91,12 +93,20 @@ Helps identify temporal patterns and peak accident periods.
 ## Project Structure
 
 accident-heatmap/
+    .env
+    .env.example
+    requirements.txt
+
     data/
-        accidents_geo.csv
+        (Raw/processed CSV data files, mostly superseded by Supabase)
 
     src/
+        db.py                # Supabase database client
         export_monthly.py
         spatial_hotspots.py
+        heatmap.py
+        seasonal_maps.py
+        monthly_trend.py
 
     outputs/
         accident_heatmap_all.html
@@ -117,13 +127,39 @@ accident-heatmap/
 
 ---
 
+## Setup and Configuration
+
+### Prerequisites
+- Python 3.8+
+- Supabase account with `pune-accidents` table populated with geocoded data.
+
+### Installation
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Set up environment variables:
+   Copy `.env.example` to `.env` and configure your Supabase URL and Key:
+   ```bash
+   cp .env.example .env
+   ```
+
 ## Running the Project
 
-Launch Frontend
+1. Generate the maps and analytical assets by running the scripts in the `src/` directory. They will fetch the dataset directly from Supabase:
+   ```bash
+   python src/export_monthly.py
+   python src/spatial_hotspots.py
+   python src/heatmap.py
+   python src/seasonal_maps.py
+   python src/monthly_trend.py
+   ```
 
+2. Launch Frontend
 Open:
-
+```
 frontend/index.html
+```
 
 
 Navigate to the analysis panel to explore:

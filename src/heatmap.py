@@ -2,14 +2,18 @@ import pandas as pd
 import folium
 from folium.plugins import HeatMap
 import os
+import sys
 
-INPUT_FILE = "data/geocoded/accidents_geo.csv"
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.db import get_accidents_data
+
 OUTPUT_FILE = "outputs/accident_heatmap_all.html"
 
 def generate_heatmap():
     os.makedirs("outputs", exist_ok=True)
 
-    df = pd.read_csv(INPUT_FILE)
+    print("📂 Loading dataset from Supabase...")
+    df = get_accidents_data()
 
     # Keep only rows with coordinates
     df = df.dropna(subset=["lat", "lon"])

@@ -1,0 +1,5 @@
+pandas
+scikit-learn
+folium
+python-dotenv
+supabase
