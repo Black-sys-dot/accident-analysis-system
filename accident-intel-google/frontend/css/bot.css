@@ -1,0 +1,92 @@
+/* Bot Container */
+.alert-bot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 120px;
+    height: 179px;
+    z-index: 1000; /* above map, below modals */
+    pointer-events: auto; /* so it doesn't block map clicks, but can receive voice clicks */
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 980px) {
+    .alert-bot-container {
+        width: 84px;
+        height: 125px;
+        bottom: 10px;
+        left: 10px;
+        right: auto;
+    }
+}
+
+.alert-bot-body {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+/* Eye positioning constraints */
+.alert-bot-eye-socket {
+    position: absolute;
+    z-index: 3;
+    top: 26.5%;
+    width: 24%;
+    height: 15%;
+    overflow: hidden;
+    border-radius: 999px;
+}
+
+.alert-bot-eye-socket.left {
+    left: 27%;
+}
+
+.alert-bot-eye-socket.right {
+    right: 35%;
+}
+
+.alert-bot-eye {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 28px; 
+    height: 26px;
+    margin-top: -13px;
+    margin-left: -14px;
+    will-change: transform;
+}
+
+.alert-bot-eye img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.alert-bot-eye.right-eye img {
+    transform: scaleX(-1);
+}
+
+@media (max-width: 980px) {
+    .alert-bot-eye {
+        width: 17px;
+        height: 16px;
+        margin-top: -8px;
+        margin-left: -8.5px;
+    }
+}
+
+/* Optional Arrow */
+.alert-bot-arrow {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    display: none; /* Reserved, default hidden */
+    z-index: 1;
+}

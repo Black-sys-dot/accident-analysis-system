@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+node_modules/
+.venv/
+env/
+venv/
+data/
+outputs/
+maps/
+*.csv
+*.png
+*.jpg
+*.jpeg

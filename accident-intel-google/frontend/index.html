@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ALERT-ACC</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function () {
+            const key = "alertacc_mobile_ui";
+            const params = new URLSearchParams(window.location.search);
+            const explicit = params.get("mobile");
+            if (explicit === "1" || explicit === "0") {
+                sessionStorage.setItem(key, explicit);
+            }
+
+            let stored = sessionStorage.getItem(key);
+            if (stored !== "1" && stored !== "0") {
+                const detectedMobile = window.matchMedia("(max-width: 980px), (hover: none), (pointer: coarse)").matches;
+                stored = detectedMobile ? "1" : "0";
+                sessionStorage.setItem(key, stored);
+            }
+
+            if (stored === "1") {
+                document.documentElement.classList.add("mobile-ui");
+            }
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #c8e1ff;
+            background-image: radial-gradient(#000 2px, transparent 2px);
+            background-size: 30px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding: 80px 20px;
+        }
+
+        .container {
+            border: 6px solid #000;
+            border-radius: 24px;
+            padding: 40px 80px;
+            background: #ffeb3b;
+            box-shadow: 16px 16px 0px #000;
+            text-align: center;
+            position: relative;
+            max-width: 900px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 24px;
+            font-weight: 500;
+            margin: 5px 0 30px 0;
+            color: #111;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border: 4px solid #000;
+            border-radius: 50px;
+            display: inline-block;
+            transition: all 0.15s ease;
+            box-shadow: 6px 6px 0px #000;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 10px 10px 0px #000;
+            transform: translate(-4px, -4px);
+        }
+
+        .btn:active {
+            box-shadow: 2px 2px 0px #000;
+            transform: translate(4px, 4px);
+        }
+
+        .btn.is-pressed {
+            box-shadow: 2px 2px 0px #000;
+            transform: translate(4px, 4px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+        }
+
+        .stats div {
+            flex: 1;
+        }
+
+        /* Flip Cards Section */
+
+        .features {
+            display: flex;
+            gap: 40px;
+            margin-top: 80px;
+            max-width: 1100px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+            perspective: 1000px;
+        }
+
+        .flip-card {
+            width: 300px;
+            height: 180px;
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .flip-card:hover .flip-inner {
+                transform: rotateY(180deg);
+            }
+        }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 5px solid #000;
+            border-radius: 18px;
+            box-shadow: 10px 10px 0px #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            backface-visibility: hidden;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .flip-front {
+            background: #ffffff;
+        }
+
+        .flip-back {
+            background: #ffeb3b;
+            transform: rotateY(180deg);
+            font-size: 15px;
+        }
+
+        /* Stickers */
+
+        .sticker {
+            position: absolute;
+            width: 130px;
+            z-index: 20;
+            filter: drop-shadow(6px 6px 0px #000);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sticker:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .accident {
+            top: -30px;
+            left: -50px;
+            transform: rotate(-12deg);
+        }
+
+        .stop {
+            top: -20px;
+            right: -30px;
+            transform: rotate(15deg);
+        }
+
+        .speed {
+            bottom: 40px;
+            right: -100px;
+            transform: rotate(10deg);
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px), (hover: none), (pointer: coarse) {
+            body {
+                padding: 36px 14px 28px;
+            }
+
+            .container {
+                padding: 28px 16px 24px;
+                border-width: 4px;
+                border-radius: 18px;
+                box-shadow: 8px 8px 0 #000;
+            }
+
+            h1 {
+                font-size: 40px;
+                letter-spacing: -1px;
+                line-height: 1;
+            }
+
+            p {
+                font-size: 18px;
+                margin: 8px 0 20px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 320px;
+                padding: 12px 16px;
+                font-size: 16px;
+                border-width: 3px;
+                box-shadow: 5px 5px 0 #000;
+            }
+
+            .stats {
+                margin-top: 24px;
+                flex-direction: column;
+                gap: 10px;
+                font-size: 13px;
+            }
+
+            .features {
+                margin-top: 28px;
+                gap: 16px;
+            }
+
+            .flip-card {
+                width: min(100%, 420px);
+                height: 164px;
+                cursor: pointer;
+                touch-action: pan-y;
+            }
+
+            .flip-inner {
+                display: block;
+                transform-style: preserve-3d;
+            }
+
+            .flip-card.is-flipped .flip-inner {
+                transform: rotateY(180deg);
+            }
+
+            .flip-card:hover .flip-inner {
+                transform: none;
+            }
+
+            .flip-front,
+            .flip-back {
+                position: absolute;
+                height: 100%;
+                border-width: 3px;
+                border-radius: 14px;
+                box-shadow: 5px 5px 0 #000;
+                backface-visibility: hidden;
+                padding: 14px 30px 14px 14px;
+                font-size: 15px;
+            }
+
+            .flip-back {
+                font-size: 14px;
+                line-height: 1.35;
+                transform: rotateY(180deg);
+            }
+
+            .flip-front::after,
+            .flip-back::after {
+                content: "\2194";
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 11px;
+                font-weight: 700;
+                color: #000;
+                opacity: 0.9;
+                pointer-events: none;
+            }
+
+            .sticker {
+                width: 72px;
+                filter: drop-shadow(4px 4px 0 #000);
+            }
+
+            .accident {
+                top: -18px;
+                left: -8px;
+            }
+
+            .stop {
+                top: -14px;
+                right: -8px;
+            }
+
+            .speed {
+                display: none;
+            }
+        }
+
+        .mobile-ui body {
+            padding: 36px 14px 28px;
+        }
+
+        .mobile-ui .container {
+            padding: 28px 16px 24px;
+            border-width: 4px;
+            border-radius: 18px;
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        .mobile-ui h1 {
+            font-size: 40px;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .mobile-ui p {
+            font-size: 18px;
+            margin: 8px 0 20px;
+        }
+
+        .mobile-ui .btn {
+            width: 100%;
+            max-width: 320px;
+            padding: 12px 16px;
+            font-size: 16px;
+            border-width: 3px;
+            box-shadow: 5px 5px 0 #000;
+        }
+
+        .mobile-ui .stats {
+            margin-top: 24px;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .mobile-ui .features {
+            margin-top: 28px;
+            gap: 16px;
+        }
+
+        .mobile-ui .flip-card {
+            width: min(100%, 420px);
+            height: 164px;
+            cursor: pointer;
+            touch-action: pan-y;
+        }
+
+        .mobile-ui .flip-inner {
+            display: block;
+            transform-style: preserve-3d;
+        }
+
+        .mobile-ui .flip-card.is-flipped .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .mobile-ui .flip-card:hover .flip-inner {
+            transform: none;
+        }
+
+        .mobile-ui .flip-front,
+        .mobile-ui .flip-back {
+            position: absolute;
+            height: 100%;
+            border-width: 3px;
+            border-radius: 14px;
+            box-shadow: 5px 5px 0 #000;
+            backface-visibility: hidden;
+            padding: 14px 30px 14px 14px;
+            font-size: 15px;
+        }
+
+        .mobile-ui .flip-back {
+            font-size: 14px;
+            line-height: 1.35;
+            transform: rotateY(180deg);
+        }
+
+        .mobile-ui .flip-front::after,
+        .mobile-ui .flip-back::after {
+            content: "\2194";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .mobile-ui .sticker {
+            width: 72px;
+            filter: drop-shadow(4px 4px 0 #000);
+        }
+
+        .mobile-ui .accident {
+            top: -18px;
+            left: -8px;
+        }
+
+        .mobile-ui .stop {
+            top: -14px;
+            right: -8px;
+        }
+
+        .mobile-ui .speed {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 34px;
+            }
+
+            .container {
+                padding: 24px 14px 18px;
+            }
+
+            .flip-front,
+            .flip-back {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .flip-front::after,
+            .flip-back::after {
+                right: 7px;
+                font-size: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="assets/accident-prone.png" class="sticker accident">
+        <img src="assets/stop.png" class="sticker stop">
+        <h1>ALERT-ACC</h1>
+        <p>Mapping Risk Across Pune</p>
+
+        <a href="map.html?v=5" class="btn">Enter Analysis</a>
+
+        <div class="stats">
+            <div>778 INCIDENTS</div>
+            <div>3 SEASONS COMPARED</div>
+            <div>100% LOCATIONS MAPPED</div>
+        </div>
+    </div>
+
+    <div class="features">
+
+        <div class="flip-card">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    Accident Hotspot Identification
+                </div>
+                <div class="flip-back">
+                    Historical accident records were spatially clustered 
+                    to identify high-density risk zones across Pune.
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    Seasonal Risk Analysis
+                </div>
+                <div class="flip-back">
+                    Accident data was categorized by month and season 
+                    to observe variation patterns such as monsoon spikes.
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-card" style="position: relative;">
+            <img src="assets/speed-limit.png" class="sticker speed">
+            <div class="flip-inner">
+                <div class="flip-front">
+                    Spatial Density Visualization
+                </div>
+                <div class="flip-back">
+                    Text-based locations were geocoded into coordinates 
+                    and visualized as an interactive heatmap.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function () {
+            const cards = Array.from(document.querySelectorAll(".flip-card"));
+            const mobileQuery = window.matchMedia("(max-width: 900px), (hover: none), (pointer: coarse)");
+            let activePointer = null;
+            const isMobileUI = () => document.documentElement.classList.contains("mobile-ui") || mobileQuery.matches;
+            const enterAnalysisBtn = document.querySelector(".btn");
+
+            if (enterAnalysisBtn) {
+                const setPressed = () => enterAnalysisBtn.classList.add("is-pressed");
+                const clearPressed = () => enterAnalysisBtn.classList.remove("is-pressed");
+
+                enterAnalysisBtn.addEventListener("pointerdown", event => {
+                    if (event.pointerType === "mouse" && event.button !== 0) {
+                        return;
+                    }
+                    setPressed();
+                });
+                enterAnalysisBtn.addEventListener("pointerup", clearPressed);
+                enterAnalysisBtn.addEventListener("pointercancel", clearPressed);
+                enterAnalysisBtn.addEventListener("pointerleave", clearPressed);
+                enterAnalysisBtn.addEventListener("blur", clearPressed);
+            }
+
+            function clearFlipped() {
+                cards.forEach(card => {
+                    card.classList.remove("is-flipped");
+                    card.setAttribute("aria-pressed", "false");
+                });
+            }
+
+            function setFlipped(card) {
+                clearFlipped();
+                if (card) {
+                    card.classList.add("is-flipped");
+                    card.setAttribute("aria-pressed", "true");
+                }
+            }
+
+            function toggleCard(card) {
+                if (!card) {
+                    return;
+                }
+                const wasFlipped = card.classList.contains("is-flipped");
+                if (wasFlipped) {
+                    clearFlipped();
+                } else {
+                    setFlipped(card);
+                }
+            }
+
+            function handleSwipe(card, startX, startY, endX, endY) {
+                if (!mobileQuery.matches || !card) {
+                    return;
+                }
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+                if (Math.abs(deltaX) < 28 || Math.abs(deltaX) < Math.abs(deltaY)) {
+                    return;
+                }
+                toggleCard(card);
+            }
+
+            function shouldFlipFromSwipe(startX, startY, endX, endY) {
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+                return Math.abs(deltaX) >= 28 && Math.abs(deltaX) > Math.abs(deltaY) + 6;
+            }
+
+            cards.forEach(card => {
+                card.setAttribute("role", "button");
+                card.setAttribute("tabindex", "0");
+                card.setAttribute("aria-pressed", "false");
+
+                card.addEventListener("keydown", event => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        if (!isMobileUI()) {
+                            return;
+                        }
+                        toggleCard(card);
+                    }
+                });
+
+                card.addEventListener("pointerdown", event => {
+                    if (!isMobileUI()) {
+                        return;
+                    }
+                    if (event.pointerType === "mouse" && event.button !== 0) {
+                        return;
+                    }
+                    if (activePointer && activePointer.pointerId !== event.pointerId) {
+                        return;
+                    }
+                    activePointer = {
+                        card,
+                        pointerId: event.pointerId,
+                        startX: event.clientX,
+                        startY: event.clientY,
+                        lastX: event.clientX,
+                        lastY: event.clientY,
+                        didFlip: false
+                    };
+                    card.setPointerCapture?.(event.pointerId);
+                });
+            });
+
+            window.addEventListener("pointermove", event => {
+                if (!isMobileUI() || !activePointer) {
+                    return;
+                }
+                if (event.pointerId !== activePointer.pointerId) {
+                    return;
+                }
+
+                activePointer.lastX = event.clientX;
+                activePointer.lastY = event.clientY;
+
+                if (!activePointer.didFlip &&
+                    shouldFlipFromSwipe(
+                        activePointer.startX,
+                        activePointer.startY,
+                        activePointer.lastX,
+                        activePointer.lastY
+                    )
+                ) {
+                    toggleCard(activePointer.card);
+                    activePointer.didFlip = true;
+                }
+            });
+
+            window.addEventListener("pointerup", event => {
+                if (!isMobileUI() || !activePointer) {
+                    return;
+                }
+                if (event.pointerId !== activePointer.pointerId) {
+                    return;
+                }
+
+                if (!activePointer.didFlip) {
+                    handleSwipe(
+                        activePointer.card,
+                        activePointer.startX,
+                        activePointer.startY,
+                        event.clientX,
+                        event.clientY
+                    );
+                }
+
+                activePointer = null;
+            });
+
+            window.addEventListener("pointercancel", () => {
+                activePointer = null;
+            });
+
+            mobileQuery.addEventListener("change", () => {
+                activePointer = null;
+                clearFlipped();
+            });
+        })();
+    </script>
+
+    <script src="js/ui-actions.js"></script>
+    <script src="js/bot.js?v=1.5"></script>
+    <script src="js/agent.js?v=2.8"></script>
+</body>
+</html>
