@@ -1,7 +1,0 @@
-Top 5 Spatial Accident Clusters (DBSCAN)
-
-1. Centroid: (18.52296, 73.85306) — 63 incidents
-2. Centroid: (18.56203, 73.91791) — 26 incidents
-3. Centroid: (18.50244, 73.93225) — 17 incidents
-4. Centroid: (18.50623, 73.78799) — 17 incidents
-5. Centroid: (18.76910, 73.40482) — 15 incidents
