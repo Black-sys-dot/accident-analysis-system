@@ -20,19 +20,28 @@
     let liveTurnResolver = null;
     let liveTurnRejecter = null;
     let liveTurnInFlight = false;
-    let liveWsDisabled = false;
+    let liveWsDisabled = !!(window.ALERT_ACC_CONFIG && window.ALERT_ACC_CONFIG.FORCE_REST_AGENT);
     let liveTurnHasToolCall = false;
     let liveTurnTextParts = [];
     let liveSuppressPostToolText = false;
     const liveAudioQueue = [];
     let liveAudioPlaying = false;
     const API_BASE_URL = ((window.ALERT_ACC_CONFIG && window.ALERT_ACC_CONFIG.RAILWAY_API_BASE_URL) || "").replace(/\/+$/, "");
+    const WS_BASE_URL = ((window.ALERT_ACC_CONFIG && window.ALERT_ACC_CONFIG.RAILWAY_WS_BASE_URL) || "").replace(/\/+$/, "");
 
     function apiUrl(path) {
         if (!API_BASE_URL) {
             return path;
         }
         return `${API_BASE_URL}${path}`;
+    }
+
+    function isLikelyUiCommand(text) {
+        const t = (text || "").toLowerCase().trim();
+        if (!t) {
+            return false;
+        }
+        return /(show|open|switch|back|heatmap|hotspot|route|safest|map|monthly|summer|monsoon|winter)/.test(t);
     }
 
     // Wait for the bot container to be added to DOM by bot.js
@@ -228,6 +237,11 @@
         }
 
         function getLiveWsUrl() {
+            if (WS_BASE_URL) {
+                const base = new URL(WS_BASE_URL);
+                const wsProto = base.protocol === "https:" ? "wss:" : (base.protocol === "ws:" || base.protocol === "wss:" ? base.protocol : "wss:");
+                return `${wsProto}//${base.host}/api/agent/live-ws`;
+            }
             if (API_BASE_URL) {
                 const base = new URL(API_BASE_URL);
                 const wsProto = base.protocol === "https:" ? "wss:" : "ws:";
@@ -410,13 +424,14 @@
                             liveTurnResolver = null;
                             liveTurnRejecter = null;
                             liveTurnInFlight = false;
+                            const hadToolCall = liveTurnHasToolCall;
                             liveTurnTextParts = [];
                             liveTurnHasToolCall = false;
                             liveSuppressPostToolText = false;
                             if (!liveAudioPlaying && !isSpeaking) {
                                 setBotState('');
                             }
-                            resolver?.();
+                            resolver?.({ hadToolCall });
                         }
                     };
                 } catch (e) {
@@ -574,7 +589,7 @@
                     throw new Error("Previous live turn is still running.");
                 }
 
-                await new Promise((resolve, reject) => {
+                const turnResult = await new Promise((resolve, reject) => {
                     liveTurnInFlight = true;
                     liveTurnHasToolCall = false;
                     liveSuppressPostToolText = false;
@@ -588,6 +603,11 @@
                         reject(new Error("Live turn timeout."));
                     }, 35000);
                 });
+
+                if (!turnResult?.hadToolCall && isLikelyUiCommand(transcript)) {
+                    console.warn("Live turn had no tool call; using REST fallback for command execution.");
+                    await processTranscriptFallback(transcript);
+                }
             } catch (err) {
                 const msg = `${err?.message || err}`.toLowerCase();
                 if (msg.includes("operation is not implemented") || msg.includes("1008")) {

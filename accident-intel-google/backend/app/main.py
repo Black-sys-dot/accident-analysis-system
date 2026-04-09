@@ -51,8 +51,11 @@ async def root_redirect():
 
 @app.get("/api/config")
 async def get_config():
-    # Return the API key for the frontend to use
-    return {"googleMapsApiKey": os.getenv("GOOGLE_MAPS_API_KEY")}
+    # Frontend should use browser-restricted key.
+    # Backward compatibility: if GOOGLE_MAPS_BROWSER_API_KEY is missing,
+    # fallback to GOOGLE_MAPS_API_KEY.
+    browser_key = os.getenv("GOOGLE_MAPS_BROWSER_API_KEY") or os.getenv("GOOGLE_MAPS_API_KEY")
+    return {"googleMapsApiKey": browser_key}
 
 app.include_router(routes_heatmap.router, prefix="/api")
 app.include_router(routes_monthly.router, prefix="/api")

@@ -106,9 +106,14 @@ def _call_google_routes_api(
     origin_lng=None,
     destination_place_id=None,
 ):
-    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+    # Routes API must use a server-side key (IP/app restricted), not browser-referrer key.
+    # Backward compatibility fallback is kept for existing environments.
+    api_key = os.getenv("GOOGLE_MAPS_SERVER_API_KEY") or os.getenv("GOOGLE_MAPS_API_KEY")
     if not api_key:
-        raise GoogleRoutesError("GOOGLE_MAPS_API_KEY is not configured.", status_code=500)
+        raise GoogleRoutesError(
+            "GOOGLE_MAPS_SERVER_API_KEY is not configured (fallback: GOOGLE_MAPS_API_KEY).",
+            status_code=500,
+        )
 
     payload = {
         "travelMode": "DRIVE",

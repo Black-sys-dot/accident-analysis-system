@@ -1,5 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://alert-acc-backend-deep-v2-production.up.railway.app/api/$1"
+    },
+    {
+      "source": "/sandbox/(.*)",
+      "destination": "https://alert-acc-backend-deep-v2-production.up.railway.app/sandbox/$1"
+    }
+  ]
 }

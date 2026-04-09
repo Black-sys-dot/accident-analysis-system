@@ -25,10 +25,15 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
 Required env vars:
 
 - `GEMINI_API_KEY`
-- `GOOGLE_MAPS_API_KEY`
+- `GOOGLE_MAPS_BROWSER_API_KEY` (for frontend map JS key returned by `/api/config`)
+- `GOOGLE_MAPS_SERVER_API_KEY` (for backend Google Routes API calls)
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_TABLE=pune-accidents`
+
+Compatibility fallback still exists:
+
+- `GOOGLE_MAPS_API_KEY` is used only if the new split keys are not provided.
 
 ## 3) Vercel (new frontend project only)
 

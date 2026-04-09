@@ -23,13 +23,14 @@
     let liveThinkingTicker = null;
     let liveTurnStartedAt = 0;
     let liveTurnReceivedAudio = false;
-    let liveWsDisabled = false;
+    let liveWsDisabled = !!(window.ALERT_ACC_CONFIG && window.ALERT_ACC_CONFIG.FORCE_REST_DEEP_AGENT);
     let liveTurnHasToolCall = false;
     let liveTurnTextParts = [];
     let liveSuppressPostToolText = false;
     const liveAudioQueue = [];
     let liveAudioPlaying = false;
     const API_BASE_URL = ((window.ALERT_ACC_CONFIG && window.ALERT_ACC_CONFIG.RAILWAY_API_BASE_URL) || "").replace(/\/+$/, "");
+    const WS_BASE_URL = ((window.ALERT_ACC_CONFIG && window.ALERT_ACC_CONFIG.RAILWAY_WS_BASE_URL) || "").replace(/\/+$/, "");
     const DEEP_DEBUG_LOGS = true;
     const SHOW_AGENT_TEXT_IN_CHAT = false;
 
@@ -238,6 +239,11 @@
         }
 
         function getLiveWsUrl() {
+            if (WS_BASE_URL) {
+                const base = new URL(WS_BASE_URL);
+                const wsProto = base.protocol === "https:" ? "wss:" : (base.protocol === "ws:" || base.protocol === "wss:" ? base.protocol : "wss:");
+                return `${wsProto}//${base.host}/api/agent/deep-live-ws`;
+            }
             if (API_BASE_URL) {
                 const base = new URL(API_BASE_URL);
                 const wsProto = base.protocol === "https:" ? "wss:" : "ws:";
