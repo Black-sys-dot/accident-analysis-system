@@ -1,27 +1,30 @@
-# ALERT-ACC (Deep v2)
+# ALERT-ACC Deep v2
 
-This repository hosts the deployed Deep v2 architecture for the accident analysis system.
+Pune accident-intelligence platform with:
 
-## Project Layout
+- interactive risk maps
+- safest-route scoring
+- voice-enabled assistant
+- deep-analysis workflow for generated charts and map layers
 
-- `accident-intel-google/frontend` - Vercel-hosted web UI (map + agent + deep analysis page)
-- `accident-intel-google/backend` - FastAPI backend for analytics, routing, agent, websocket, and deep-analysis execution
-- `accident-intel-google/data_pipeline` - dataset prep scripts and source CSV pipeline
+## Architecture
 
-## Current Deployment Model
+`Vercel Frontend -> Railway Backend -> Supabase (pune-accidents)`
 
-- Frontend: Vercel (static files + rewrites)
-- Backend: Railway (single FastAPI service)
-- Data source: Supabase table (`pune-accidents`)
+- Frontend serves static UI and proxies backend calls.
+- Backend runs FastAPI + agent + routing + deep-analysis endpoints.
+- Supabase is the runtime data source.
 
-Frontend rewrites currently proxy:
+## Repository Structure
 
-- `/api/*` -> Railway backend `/api/*`
-- `/sandbox/*` -> Railway backend `/sandbox/*`
+- `accident-intel-google/frontend` - UI (`index.html`, `map.html`, `deep_analysis.html`, JS/CSS/assets)
+- `accident-intel-google/backend` - FastAPI app, routes, services, sandbox runtime
+- `accident-intel-google/data_pipeline` - ingestion/geocoding pipeline assets
+- `accident-intel-google/DEPLOYMENT_SETUP.md` - deployment reference
 
-## Required Environment Variables (Backend)
+## Environment Variables (Backend)
 
-Set these in Railway (and in local `.env` if running locally):
+Set these in Railway (and local `.env` for local backend run):
 
 - `GEMINI_API_KEY`
 - `GOOGLE_MAPS_BROWSER_API_KEY`
@@ -30,41 +33,39 @@ Set these in Railway (and in local `.env` if running locally):
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_TABLE=pune-accidents`
 
-Compatibility fallback exists in code:
+Compatibility fallback:
 
-- `GOOGLE_MAPS_API_KEY` is used only when split browser/server keys are not provided.
+- `GOOGLE_MAPS_API_KEY` is used only if split map keys are not provided.
 
-## Local Run
+## Local Development
 
-From repo root:
+Start backend:
 
 ```powershell
 cd accident-intel-google\backend
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Then open:
+Open:
 
 - `http://127.0.0.1:8000/frontend/index.html`
 - `http://127.0.0.1:8000/frontend/deep_analysis.html`
 
-## Core API Surface
+## API Surface
 
-- Map analytics: `/api/heatmap`, `/api/monthly`, `/api/hotspots`, `/api/seasonal`
-- Routing: `/api/safest-route`
-- Agent (standard): `/api/agent/interact`, `/api/agent/speak`, `/api/agent/transcribe-live`, `WS /api/agent/live-ws`
-- Agent (deep): `WS /api/agent/deep-live-ws`, deep tool flow + `/api/sandbox/reset`, `/sandbox/*`
+- map analytics: `/api/heatmap`, `/api/monthly`, `/api/hotspots`, `/api/seasonal`
+- routing: `/api/safest-route`
+- standard agent:
+  - `POST /api/agent/interact`
+  - `POST /api/agent/speak`
+  - `POST /api/agent/transcribe-live`
+  - `WS /api/agent/live-ws`
+- deep-analysis agent:
+  - `WS /api/agent/deep-live-ws`
+  - `POST /api/sandbox/reset`
+  - `GET /sandbox/*`
 
-## Security Notes
-
-- Never commit `.env` files or raw keys.
-- Keep `SUPABASE_SERVICE_ROLE_KEY` server-side only.
-- Keep map keys split:
-  - Browser key for frontend map loading
-  - Server key for backend Routes API calls
-- Restrict browser map key by HTTP referrers (Vercel domain + optional localhost).
-
-## Deployment Notes
+## Deployment
 
 Backend start command:
 
@@ -72,6 +73,20 @@ Backend start command:
 uvicorn app.main:app --host 0.0.0.0 --port $PORT
 ```
 
-Additional deployment details are documented in:
+Frontend `vercel.json` rewrites:
 
-- `accident-intel-google/DEPLOYMENT_SETUP.md`
+- `/api/*` -> Railway backend `/api/*`
+- `/sandbox/*` -> Railway backend `/sandbox/*`
+
+## Security Checklist
+
+- never commit `.env` files
+- keep `SUPABASE_SERVICE_ROLE_KEY` server-side only
+- keep map keys split:
+  - browser key for Maps JS
+  - server key for Routes API
+- restrict browser key by HTTP referrer (Vercel domain + optional localhost)
+
+---
+
+Built for resilient demos and isolated deployments (Deep v2 branch promoted to `main`).
